@@ -1,6 +1,6 @@
-## pytorch_models
+# pytorch_models
 
-# file
+## file
 
 model.py contain AlexNet, VGGNet16, Resnet18, Resnet34, Resnet50
 
@@ -9,7 +9,7 @@ train_model.py is use to train model
 
 
 
-# params
+## params
 
 in_channels=3 class_num=1000
 
@@ -37,6 +37,6 @@ resnet50
 ('Total number of params', 25583592)
 ('Total layers', 54)
 
-# Train 
+## Train 
 simplenet epoch=20 test_correct=0.8555 
 
