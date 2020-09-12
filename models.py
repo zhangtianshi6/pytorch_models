@@ -2,6 +2,25 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+# simple model
+class Net(nn.Module):
+    def __init__(self, channels, num_class):
+        super(Net, self).__init__()
+        self.conv1 = nn.Conv2d(channels, 20, 5, 1) 
+        self.conv2 = nn.Conv2d(20, 50, 5, 1)
+        self.fc1 = nn.Linear(4*4*50, 500)
+        self.fc2 = nn.Linear(500, num_class)
+
+    def forward(self, x):  
+        x = F.relu(self.conv1(x)) # x = (N,50,24,24)
+        x = F.max_pool2d(x, 2, 2) # x = (N,50,12,12)
+        x = F.relu(self.conv2(x)) # x = (N,50,8,8)
+        x = F.max_pool2d(x, 2, 2) # x = (N,50,4,4)
+        x = x.view(-1, 4*4*50)    # x = (N,4*4*50)
+        x = F.relu(self.fc1(x))   # x = (N,4*4*50)*(4*4*50, 500)=(N,500)
+        x = self.fc2(x)           # x = (N,500)*(500, 10)=(N,10)
+        return F.log_softmax(x, dim=1)  
+
 
 # alexnet model
 class AlexNet(nn.Module):
@@ -285,8 +304,19 @@ class Resnet50(nn.Module):
         return F.log_softmax(out, dim=1)
 
 
-def resnet():
-    return Resnet50(1000)
+
+def simplenet():
+    return Net(3, 1000)
+def alexnet():
+    return AlexNet(3, 1000)
+def vggnet16():
+    return VGGNet16(3, 1000)
+def resnet18():
+    return Resnet18(3, 1000)
+def resnet34():
+    return Resnet34(3, 1000)
+def resnet50():
+    return Resnet50(3, 1000)
 
 
 from torch.autograd import Variable
@@ -301,8 +331,7 @@ def test(net):
 
 
 if __name__ == "__main__":
-    for net_name in __all__:
-        if net_name.startswith('resnet'):
+     for net_name in ['simplenet', 'alexnet', 'vggnet16', 'resnet18', 'resnet34', 'resnet50']:
             print(net_name)
             test(globals()[net_name]())
-            print()
+            print
